@@ -53,7 +53,7 @@ int main (int argc, char **argv) {
 
       // Getting the name and port of client address
       u_int servaddr_len = sizeof(servaddr);
-      if (getpeername(listenfd, (struct sockaddr *)&servaddr, &servaddr_len) == -1)
+      if (getpeername(connfd, (struct sockaddr *)&servaddr, &servaddr_len) == -1)
          perror("getpeername");
       else
          printf("Peer IP address: %s, Peer port: %d\n", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port));

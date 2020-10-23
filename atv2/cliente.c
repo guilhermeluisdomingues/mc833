@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
    // Setting the server ip addres, the connection type (TCP) and the connection port
    bzero(&servaddr, sizeof(servaddr));
    servaddr.sin_family = AF_INET;
-   servaddr.sin_port   = htons(13);
+   servaddr.sin_port   = htons(58861);
 
    // Converting conection from text to binary
    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
@@ -55,9 +55,11 @@ int main(int argc, char **argv) {
    if (getsockname(sockfd, (struct sockaddr *) &servaddr, &servaddr_len) == -1)
       perror("getsockname");
    else {
+       // Finding local IP and local Port
       char connectionIP[16];
+      
       inet_ntop(AF_INET, &servaddr.sin_addr, connectionIP, sizeof(connectionIP));
-	   printf("Local ip address: %s, Local port: %u\n", connectionIP, ntohs(servaddr.sin_port));   
+	   printf("Local ip address: %s, Local port: %u\n", connectionIP, ntohs(servaddr.sin_port));
    }
 	
    // Receiving the messages from server, buffering and printing it
