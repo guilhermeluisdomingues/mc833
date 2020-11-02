@@ -19,10 +19,11 @@ int main(int argc, char **argv) {
    struct sockaddr_in servaddr;
 
    // The second argument expected is the ipaddres for connection
-   if (argc != 2) {
+   if (argc < 3) {
       strcpy(error,"uso: ");
       strcat(error,argv[0]);
       strcat(error," <IPaddress>");
+      strcat(error," <Port>");
       perror(error);
       exit(1);
    }
@@ -33,10 +34,14 @@ int main(int argc, char **argv) {
       exit(1);
    }
 
+   // converting the Port argument (argv[2]) from string to int
+   char *p;
+   int port = strtol(argv[2], &p, 10);
+
    // Setting the server ip addres, the connection type (TCP) and the connection port
    bzero(&servaddr, sizeof(servaddr));
    servaddr.sin_family = AF_INET;
-   servaddr.sin_port   = htons(58861);
+   servaddr.sin_port   = htons(port);
 
    // Converting conection from text to binary
    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {

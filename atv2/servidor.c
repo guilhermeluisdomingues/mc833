@@ -37,6 +37,17 @@ int main (int argc, char **argv) {
       exit(1);
    }
    
+   // Getting the socket name and port
+   u_int servaddr_len = sizeof(servaddr);
+   if (getsockname(listenfd, (struct sockaddr *) &servaddr, &servaddr_len) == -1)
+      perror("getsockname");
+   else {
+       // Finding local IP and local Port
+      char connectionIP[16];
+      inet_ntop(AF_INET, &servaddr.sin_addr, connectionIP, sizeof(connectionIP));
+	   printf("Server connected to %s:%u\n", connectionIP, ntohs(servaddr.sin_port));
+   }
+
    // listening for connections
    if (listen(listenfd, LISTENQ) == -1) {
       perror("listen");
