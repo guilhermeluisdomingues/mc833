@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <pthread.h>
+
 #define MAXLINE 4096
 
 int Socket(int family, int type, int flags) {
@@ -73,13 +75,13 @@ char *reverseString(char* str) {
 }
 
 int main(int argc, char **argv) {
-int sockfd, n;
-  char recvline[MAXLINE + 1];
-  char buf[MAXLINE + 1];
-  char error[MAXLINE + 1];
-  char source[MAXLINE/2];
-  struct sockaddr_in servaddr;
-  FILE* command_result;
+   int sockfd, n;
+   char recvline[MAXLINE + 1];
+   char buf[MAXLINE + 1];
+   char error[MAXLINE + 1];
+   char source[MAXLINE/2];
+   struct sockaddr_in servaddr;
+   FILE* command_result;
 
    // The second argument expected is the ipaddres for connection
    if (argc < 3) {
