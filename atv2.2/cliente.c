@@ -36,18 +36,6 @@ void Connect(int sockfd, struct sockaddr_in *servaddr, socklen_t len) {
 }
 
 void printConnection(int sockfd, struct sockaddr_in servaddr) {
-   struct sockaddr_in peeraddr;
-
-   u_int servaddr_len = sizeof(servaddr), peeraddr_len = sizeof(peeraddr);
-
-   if (getsockname(sockfd, (struct sockaddr *)&servaddr, &servaddr_len) < 0)
-      perror("getsockname");
-
-   if (getpeername(sockfd, (struct sockaddr *)&peeraddr, &peeraddr_len) < 0)
-      perror("getpeername");
-
-   printf("Server address: %s:%d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
-   printf("Client socket: %s:%d\n", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port));
 
 }
 
@@ -60,18 +48,18 @@ int isExitCommand(char *str) {
       return 0;
 }
 
-char *str_reverse(char *str) {
-    int len = strlen(str);
-    char *p1 = str;
-    char *p2 = str + len - 1;
+char *reverseString(char* str) {
+   
+   int index = 0, recvline_len = strlen(str);
+   char* reversedString = malloc(sizeof(char*) * recvline_len);
+   
+   for(int i=recvline_len-1; i>=0; i--) {
+      reversedString[index] = str[i];
+      index++;
+   }
+   reversedString[index] = '\n';
 
-    while (p1 < p2) {
-        char tmp = *p1;
-        *p1++ = *p2;
-        *p2-- = tmp;
-    }
-
-    return str;
+   return reversedString;
 }
 
 int main(int argc, char **argv) {
@@ -111,14 +99,22 @@ int sockfd, n;
    // Establishing the connection
    Connect(sockfd, &servaddr, sizeof(servaddr));
 
-   printConnection(sockfd, servaddr);
+   // Printing server and peer address
+   struct sockaddr_in peeraddr;
+   u_int servaddr_len = sizeof(servaddr), peeraddr_len = sizeof(peeraddr);
+
+   if (getsockname(sockfd, (struct sockaddr *)&servaddr, &servaddr_len) < 0)
+      perror("getsockname");
+
+   if (getpeername(sockfd, (struct sockaddr *)&peeraddr, &peeraddr_len) < 0)
+      perror("getpeername");
+
+   printf("Server address: %s:%d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
+   printf("Client socket: %s:%d\n", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port));
 
    // Receiving the messages from server, buffering and printing it
    while ( (n = read(sockfd, recvline, MAXLINE)) > 0) {
       recvline[n] = 0;
-
-      if (isExitCommand(recvline))
-         break;
 
       command_result = popen(recvline, "r");
       size_t newLen = fread(source, sizeof(char), MAXLINE, command_result);
@@ -126,6 +122,11 @@ int sockfd, n;
          fputs("Error reading file", stderr);
       } else {
          source[newLen++] = '\0';
+      }
+
+      if (fputs(reverseString(recvline), stdout) == EOF) {
+         perror("fputs error");
+         exit(1);
       }
 
       snprintf(buf, sizeof(char) * MAXLINE + 1, "%s:%d %s", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port), source);

@@ -65,6 +65,12 @@ int Fork() {
    return forked;
 }
 
+void logDateTime(FILE *file, char* status) {
+   time_t ticks;
+   ticks = time(NULL);
+   fprintf(file, "%s at %.24s\r\n", status, ctime(&ticks));
+}
+
 int main (int argc, char **argv) {
    char   buf[MAXDATASIZE];
    char   error[MAXLINE + 1];
@@ -97,17 +103,6 @@ int main (int argc, char **argv) {
    servaddr.sin_port = htons(port);   // Getting the port from execution
 
    Bind(listenfd, &servaddr, sizeof(servaddr));
-   
-   // Getting the socket name and port
-   u_int servaddr_len = sizeof(servaddr);
-   if (getsockname(listenfd, (struct sockaddr *) &servaddr, &servaddr_len) == -1)
-      perror("getsockname");
-   else {
-       // Finding local IP and local Port
-      char connectionIP[16];
-      inet_ntop(AF_INET, &servaddr.sin_addr, connectionIP, sizeof(connectionIP));
-	   printf("Server connected to %s:%u\n", connectionIP, ntohs(servaddr.sin_port));
-   }
 
    Listen(listenfd);
 
@@ -121,6 +116,8 @@ int main (int argc, char **argv) {
    // This block send the messages for client
    for (;;) {
       connfd = Accept(listenfd, &peeraddr, &peerlen);
+
+      logDateTime(file, "connected");
 
       pid = Fork();
       if (pid == 0) {
@@ -137,15 +134,22 @@ int main (int argc, char **argv) {
                perror("buffer error");
                exit(1);
             }
-            fprintf(file, "comando: %s\n", commands[i]);
+            fprintf(file, "command: %s\n", commands[i]);
             fprintf(file, "%s", recvline);
+            fprintf(file, "\n");
+
             if (fputs(recvline, stdout) == EOF) {
                perror("fputs error");
                exit(1);
             }
-            fprintf(file, "\n");
          }
+
+         char connectionIP[16];
+         inet_ntop(AF_INET, &peeraddr.sin_addr, connectionIP, sizeof(connectionIP));
+         printf("Client %s:%u disconnected\n", connectionIP, ntohs(peeraddr.sin_port));
+
          close(connfd);
+         logDateTime(file, "disconnected");
          exit(0);
       }
       close(connfd);
