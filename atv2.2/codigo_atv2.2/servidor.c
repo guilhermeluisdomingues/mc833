@@ -13,7 +13,7 @@
 #define LISTENQ 10
 #define MAXDATASIZE 100
 #define MAXLINE 4096
-#define NUM_OF_COMMANDS 3
+#define NUM_OF_COMMANDS 4
 
 int Socket(int family, int type, int flags) {
   int sockfd;
@@ -122,7 +122,8 @@ int main (int argc, char **argv) {
    char commands[NUM_OF_COMMANDS][MAXDATASIZE] = {
       "pwd",
       "ls",
-      "ps"
+      "ps",
+      "exit"
    };
 
    // This block send the messages for client

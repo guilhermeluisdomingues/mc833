@@ -37,29 +37,6 @@ void Connect(int sockfd, struct sockaddr_in *servaddr, socklen_t len) {
    }
 }
 
-
-int shouldExit() {
-   char exitString[MAXLINE] = "exit";
-
-   // char input_buf[MAXLINE+1];
-   // int count;
-
-   // ioctl(0, FIONREAD, &count);
-
-   // // if (count>0) {
-   //    fgets(input_buf, count, stdin);
-   //    if(input_buf[count-1] == '\n') {
-   //       input_buf[count-1] = '\0';
-   //    }
-   char str[4];
-   scanf("%s", str);
-   if (strcmp(str, exitString) == 0)
-      return 1;
-   // }
-
-   return 0;
-}
-
 char *reverseString(char* str) {
    
    int index = 0, recvline_len = strlen(str);
@@ -72,6 +49,13 @@ char *reverseString(char* str) {
    reversedString[index] = '\n';
 
    return reversedString;
+}
+
+int shouldExit(char* str) {
+   if(strcmp(str, "exit") == 0) {
+      return 1;
+   }
+   return 0;
 }
 
 int main(int argc, char **argv) {
@@ -128,7 +112,7 @@ int main(int argc, char **argv) {
    while ( (n = read(sockfd, recvline, MAXLINE)) > 0) {
       recvline[n] = 0;
 
-      if (shouldExit() == 1) {
+      if (shouldExit(recvline) == 1) {
          snprintf(buf, sizeof(char) * MAXLINE + 1, "%s", "exit");
          write(sockfd, buf, strlen(buf));
          exit(0);

@@ -1,0 +1,22 @@
+connected at Sun Nov  8 17:21:17 2020
+command: pwd
+127.0.0.1:50117 /Users/guilhermedomingues/Documents/unicamp/mc833/atv2.2/codigo_atv2.2
+
+command: ls
+127.0.0.1:50117 cliente
+cliente.c
+server_log.out
+servidor
+servidor.c
+
+command: ps
+127.0.0.1:50117   PID TTY           TIME CMD
+ 1037 ttys000    0:00.19 /bin/zsh -l
+ 2571 ttys000    0:00.00 ./servidor 8000
+ 2588 ttys000    0:00.00 ./servidor 8000
+ 1408 ttys001    0:00.14 /bin/zsh -l
+ 2587 ttys001    0:00.00 ./cliente 127.0.0.1 8000
+ 2589 ttys001    0:00.00 (bash)
+ 2590 ttys001    0:00.00 (ls)
+
+disconnected at Sun Nov  8 17:21:17 2020
