@@ -14,6 +14,7 @@
 
 int main(int argc, char **argv) {
    int    sockfd, n;
+   struct sockaddr_in servaddr;
    char   recvline[MAXLINE + 1];
    char   error[MAXLINE + 1];
    struct sockaddr_in servaddr;

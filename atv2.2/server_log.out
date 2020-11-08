@@ -1,0 +1,12 @@
+comando: pwd
+127.0.0.1:8000 /Users/guilhermedomingues/Documents/unicamp/mc833/atv2.2
+
+comando: ls
+127.0.0.1:8000 cliente
+cliente.c
+cliente_1
+cliente_1.c
+server_log.out
+servidor
+servidor.c
+servidor_1
