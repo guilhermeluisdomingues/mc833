@@ -13,7 +13,7 @@
 #define LISTENQ 10
 #define MAXDATASIZE 100
 #define MAXLINE 4096
-#define NUM_OF_COMMANDS 2
+#define NUM_OF_COMMANDS 3
 
 int Socket(int family, int type, int flags) {
   int sockfd;
@@ -71,6 +71,17 @@ void logDateTime(FILE *file, char* status) {
    fprintf(file, "%s at %.24s\r\n", status, ctime(&ticks));
 }
 
+void closeConnectionAndLog(FILE *file, int connfd, struct sockaddr_in peeraddr) {
+
+   char connectionIP[16];
+   inet_ntop(AF_INET, &peeraddr.sin_addr, connectionIP, sizeof(connectionIP));
+   printf("Client %s:%u disconnected\n", connectionIP, ntohs(peeraddr.sin_port));
+
+   logDateTime(file, "disconnected");
+   close(connfd);
+   exit(0);
+}
+
 int main (int argc, char **argv) {
    char   buf[MAXDATASIZE];
    char   error[MAXLINE + 1];
@@ -110,7 +121,8 @@ int main (int argc, char **argv) {
    
    char commands[NUM_OF_COMMANDS][MAXDATASIZE] = {
       "pwd",
-      "ls"
+      "ls",
+      "ps"
    };
 
    // This block send the messages for client
@@ -127,8 +139,12 @@ int main (int argc, char **argv) {
             snprintf(buf, sizeof(buf), "%s", commands[i]);
             write(connfd, buf, strlen(buf));
 
-            n = read(connfd, recvline, MAXDATASIZE);
+            n = read(connfd, recvline, MAXLINE);
             recvline[n] = 0;
+
+            if (strcmp(recvline, "exit") == 0) {
+               closeConnectionAndLog(file, connfd, peeraddr);
+            }
 
             if (n < 0) {
                perror("buffer error");
@@ -144,13 +160,7 @@ int main (int argc, char **argv) {
             }
          }
 
-         char connectionIP[16];
-         inet_ntop(AF_INET, &peeraddr.sin_addr, connectionIP, sizeof(connectionIP));
-         printf("Client %s:%u disconnected\n", connectionIP, ntohs(peeraddr.sin_port));
-
-         close(connfd);
-         logDateTime(file, "disconnected");
-         exit(0);
+         closeConnectionAndLog(file, connfd, peeraddr);
       }
       close(connfd);
    }

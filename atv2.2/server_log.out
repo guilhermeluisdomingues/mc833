@@ -1,12 +1,54 @@
-connected at Sun Nov  8 10:26:35 2020
+connected at Sun Nov  8 13:25:57 2020
 command: pwd
-127.0.0.1:56376 /Users/guilhermedomingues/Documents/unicamp/mc833/atv2.2
+127.0.0.1:62513 /Users/guilhermedomingues/Documents/unicamp/mc833/atv2.2
 
 command: ls
-127.0.0.1:56376 cliente
+127.0.0.1:62513 cliente
 cliente.c
 server_log.out
 servidor
 servidor.c
+thread
+thread.c
 
-disconnected at Sun Nov  8 10:26:35 2020
+command: ps
+127.0.0.1:62513   PID TTY           TIME CMD
+31935 ttys000    0:00.14 /bin/zsh -l
+32685 ttys000    0:00.01 ./cliente 127.0.0.1 8000
+32687 ttys000    0:00.00 (bash)
+32699 ttys000    0:00.00 (ls)
+31226 ttys001    0:00.15 /bin/zsh -l
+31495 ttys001    0:00.00 ./thread
+32665 ttys001    0:00.00 ./servidor 8000
+32686 ttys001    0:00.00 ./servidor 8000
+23198 ttys004    0:00.78 -zsh
+
+disconnected at Sun Nov  8 13:26:07 2020
+connected at Sun Nov  8 13:25:57 2020
+connected at Sun Nov  8 13:27:42 2020
+command: pwd
+127.0.0.1:62564 /Users/guilhermedomingues/Documents/unicamp/mc833/atv2.2
+
+command: ls
+127.0.0.1:62564 cliente
+cliente.c
+server_log.out
+servidor
+servidor.c
+thread
+thread.c
+
+command: ps
+127.0.0.1:62564   PID TTY           TIME CMD
+31935 ttys000    0:00.15 /bin/zsh -l
+32808 ttys000    0:00.00 ./cliente 127.0.0.1 8000
+32810 ttys000    0:00.00 (bash)
+32819 ttys000    0:00.00 (ls)
+31226 ttys001    0:00.15 /bin/zsh -l
+31495 ttys001    0:00.00 ./thread
+32665 ttys001    0:00.00 ./servidor 8000
+32686 ttys001    0:00.00 (servidor)
+32809 ttys001    0:00.00 ./servidor 8000
+23198 ttys004    0:00.78 -zsh
+
+disconnected at Sun Nov  8 13:27:44 2020

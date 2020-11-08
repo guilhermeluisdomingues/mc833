@@ -35,24 +35,34 @@ void Connect(int sockfd, struct sockaddr_in *servaddr, socklen_t len) {
    }
 }
 
-void printConnection(int sockfd, struct sockaddr_in servaddr) {
 
-}
-
-int isExitCommand(char *str) {
+int shouldExit() {
    char exitString[MAXLINE] = "exit";
 
+   // char input_buf[MAXLINE+1];
+   // int count;
+
+   // ioctl(0, FIONREAD, &count);
+
+   // // if (count>0) {
+   //    fgets(input_buf, count, stdin);
+   //    if(input_buf[count-1] == '\n') {
+   //       input_buf[count-1] = '\0';
+   //    }
+   char str[4];
+   scanf("%s", str);
    if (strcmp(str, exitString) == 0)
       return 1;
-   else
-      return 0;
+   // }
+
+   return 0;
 }
 
 char *reverseString(char* str) {
    
    int index = 0, recvline_len = strlen(str);
    char* reversedString = malloc(sizeof(char*) * recvline_len);
-   
+
    for(int i=recvline_len-1; i>=0; i--) {
       reversedString[index] = str[i];
       index++;
@@ -115,6 +125,12 @@ int sockfd, n;
    // Receiving the messages from server, buffering and printing it
    while ( (n = read(sockfd, recvline, MAXLINE)) > 0) {
       recvline[n] = 0;
+
+      if (shouldExit() == 1) {
+         snprintf(buf, sizeof(char) * MAXLINE + 1, "%s", "exit");
+         write(sockfd, buf, strlen(buf));
+         exit(0);
+      }
 
       command_result = popen(recvline, "r");
       size_t newLen = fread(source, sizeof(char), MAXLINE, command_result);
