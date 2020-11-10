@@ -155,10 +155,10 @@ int main (int argc, char **argv) {
             fprintf(file, "%s", recvline);
             fprintf(file, "\n");
 
-            if (fputs(recvline, stdout) == EOF) {
-               perror("fputs error");
-               exit(1);
-            }
+            // if (fputs(recvline, stdout) == EOF) {
+            //    perror("fputs error");
+            //    exit(1);
+            // }
          }
 
          closeConnectionAndLog(file, connfd, peeraddr);
