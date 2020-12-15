@@ -1,10 +1,17 @@
-connected at Mon Nov 23 18:05:22 2020
+connected at Tue Nov 24 17:59:49 2020
 command: pwd
+127.0.0.1:52186 /Users/guilhermedomingues/Documents/unicamp/mc833/atv3/code
 
 command: ls
+127.0.0.1:52186 cliente
+cliente.c
+execute_clients.sh
+server_log.out
+servidor
+servidor.c
 
 command: ps
 
 command: exit
 
-disconnected at Mon Nov 23 18:05:42 2020
+disconnected at Tue Nov 24 18:01:52 2020

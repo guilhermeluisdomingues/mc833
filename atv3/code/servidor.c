@@ -14,7 +14,7 @@
 #include <sys/resource.h>
 #include <signal.h>
 
-#define LISTENQ 5
+#define LISTENQ 1
 #define MAXDATASIZE 100
 #define MAXLINE 4096
 #define NUM_OF_COMMANDS 4
