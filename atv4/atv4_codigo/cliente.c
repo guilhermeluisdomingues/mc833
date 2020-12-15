@@ -16,16 +16,18 @@
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 
+// Code based on Unix Networking Programming, Vol 1. page 228
 void str_cli(FILE *fp, int sockfd)
 {
    int maxfdp1, stdineof;
    fd_set rset;
    char buf[MAXLINE];
    int n;
+
    stdineof = 0;
    FD_ZERO(&rset);
-   for (;;)
-   {
+   
+   for ( ; ; ) {
       if (stdineof == 0)
          FD_SET(fileno(fp), &rset);
 
@@ -35,24 +37,22 @@ void str_cli(FILE *fp, int sockfd)
       if (select(maxfdp1, &rset, NULL, NULL, NULL) < 0)
          perror("select error");
 
-      if (FD_ISSET(sockfd, &rset))
-      { /* socket is readable */
+      if (FD_ISSET(sockfd, &rset)) {
          if ((n = read(sockfd, buf, MAXLINE)) == 0) {
             if (stdineof == 1)
-               return; /* normal termination */
+               return;
             else
                perror("str_cli: server terminated prematurely");
          }
-         printf("reading: %s", buf);
+
          write(fileno(stdout), buf, n);
       }
 
-      if (FD_ISSET(fileno(fp), &rset))
-      { /* input is readable */
+      if (FD_ISSET(fileno(fp), &rset)) {
          if ((n = read(fileno(fp), buf, MAXLINE)) == 0)
          {
             stdineof = 1;
-            shutdown(sockfd, SHUT_WR); /* send FIN */
+            shutdown(sockfd, SHUT_WR);
             FD_CLR(fileno(fp), &rset);
             continue;
          }
@@ -65,7 +65,6 @@ int main(int argc, char **argv)
 {
    int sockfd;
    struct sockaddr_in servaddr;
-   // char recvline[MAXLINE + 1];
    char error[MAXLINE + 1];
    FILE *fp = stdin;
 
@@ -110,20 +109,9 @@ int main(int argc, char **argv)
       exit(1);
    }
 
-   // Getting the socket name and port
-   u_int servaddr_len = sizeof(servaddr);
-   if (getsockname(sockfd, (struct sockaddr *)&servaddr, &servaddr_len) == -1)
-      perror("getsockname");
-   else
-   {
-      // Finding local IP and local Port
-      char connectionIP[16];
-
-      inet_ntop(AF_INET, &servaddr.sin_addr, connectionIP, sizeof(connectionIP));
-      printf("Local ip address: %s, Local port: %u\n", connectionIP, ntohs(servaddr.sin_port));
-   }
-
    str_cli(fp, sockfd);
+
+   close(sockfd);
 
    exit(0);
 }
