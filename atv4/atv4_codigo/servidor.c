@@ -15,17 +15,9 @@
 
 int main(int argc, char **argv)
 {
-   int listenfd, connfd;
+   int listenfd, connfd, n;
    struct sockaddr_in servaddr;
    char buf[MAXLINE];
-
-   int i, maxi, maxfd, sockfd;
-   int nready, client[FD_SETSIZE];
-   ssize_t n;
-   fd_set rset, allset;
-   socklen_t clilen;
-   struct sockaddr_in cliaddr;
-
 
    // Creating the socket in the text form
    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
